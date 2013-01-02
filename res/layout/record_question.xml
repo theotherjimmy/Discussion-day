@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	      android:orientation="vertical"
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent">
+  <TextView android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+	    android:gravity="center"
+	    android:textSize="30sp"
+	    android:layout_weight="0.8"
+	    android:id="@+id/textRecordStudentName"/>
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal"
+		android:layout_weight="0.2"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
+    <Button android:layout_height="fill_parent"
+	    android:layout_width="wrap_content"
+	    android:layout_weight="0.5"
+	    android:text="Correct"
+	    android:textSize="15sp"
+	    android:id="@+id/buttonRecordCorrect"/>
+    <Button android:layout_height="fill_parent"
+	    android:layout_width="wrap_content"
+	    android:layout_weight="0.5"
+	    android:text="Incorrect"
+	    android:textSize="15sp"
+	    android:id="@+id/buttonRecordIncorrect"/>
+  </LinearLayout>
+  <Button android:layout_height="wrap_content"
+	  android:layout_width="fill_parent"
+	    android:layout_weight="0.2"
+	  android:text="Pass"
+	  android:textSize="15sp"
+	  android:id="@+id/buttonRecordPass"/>
+</LinearLayout>
