@@ -143,6 +143,7 @@
     db))
 
 (define (delete-student db ::student-data id)
+  (db:delete (mk-sql 'log) (mk-sql 'student "=" id))
   (db:delete (mk-sql 'students) (mk-sql student-data:C_ID "=" id)))
 				       
 (define (add-class db ::student-data name time)
@@ -155,6 +156,8 @@
 
 (define (delete-class db ::student-data id)
   (db:delete (mk-sql 'students) (mk-sql 'class "=" id))
+  (db:delete (mk-sql 'discussions) (mk-sql 'class "=" id))
+  (db:delete (mk-sql 'log) (mk-sql 'class "=" id))
   (db:delete (mk-sql 'classes) (mk-sql student-data:C_ID "=" id)))
 
 (define (open-discussion db ::student-data class ::int)
@@ -213,5 +216,3 @@
     (add-to-log db 3 0 discussion 'pass)
     (add-to-log db 3 0 discussion 'pass)
     (add-to-log db 3 0 discussion 'pass))) 
-
-
