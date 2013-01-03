@@ -5,19 +5,24 @@
       android:versionName="1.0">
   <uses-permission android:name="android.permission.INTERNET" /> 
   <supports-screens android:xlargeScreens="true" />
-    <application android:label="@string/app_name" 
+    <application android:label="Discussion Day" 
                  android:name="prototype$Mnapp">
         <activity android:name="Prototype"
-                  android:label="@string/app_name">
+                  android:label="Discussion Day">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-	<activity android:name="class$Mnview" />
-	<activity android:name="record$Mnquestion" />
+	<activity android:name="class$Mnview"
+		  android:label="Class Data"/>
+	<activity android:name="record$Mnquestion"
+		  android:label="Record a Question!"/>
 	<activity android:name="tab$Mnstudents" />
 	<activity android:name="tab$Mndiscussions" />
-	<activity android:name="discussion$Mnview" />
+	<activity android:name="discussion$Mnview"
+		  android:label="All Student Data for a Discussion"/>
+	<activity android:name="student$Mnview"
+		  android:label="A Student's Data for All Discussions"/>
     </application>
 </manifest>

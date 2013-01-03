@@ -84,6 +84,8 @@
 			  (mk-extra class-view 'class) 0)))
    (when (= (*:get-count (students ((this):get-db) class-num)) 0)
 	 ((Toast:make-text (this) "You should start by adding students to this class. You can do that by touching the menu button" Toast:LENGTH_SHORT):show))
+   ((as TextView ((this):find-view-by-id R$id:className)):set-text
+    (id->class-name ((this):get-db) class-num))
    (((this):find-view-by-id R$id:classViewStartDiscussion):set-on-click-listener
     (lambda (v)
       (if (> (*:get-count (students ((this):get-db) class-num)) 0)
@@ -132,26 +134,44 @@
     (let  ((cursor (students ((this):get-db) class-num)))
       (startManagingCursor cursor)
       (Log:d "prototype" (cursor:get-count))
-      ((as ListView ((this):find-view-by-id R$id:tabStudents)):set-on-item-long-click-listener
-       (lambda (parent view pos id)
+      ((as ListView ((this):find-view-by-id R$id:tabStudents)):set-on-item-click-listener
+       (lambda (parent view pos id ::long)
 	 (*:show
-	  (*:set-negative-button
-	   (*:set-positive-button
-	    (make <android.app.AlertDialog$Builder>
-	      (this)
-	      title: (id->student-name ((this):get-db) id)
-	      view: (TextView
-		     (this)
-		     text: "would you like to permanently remove this student?"))
-	    "yes"
-	    (lambda (dialog ::Dialog button)
-	      (*:dismiss dialog)
-	      (delete-student ((this):get-db) id)))
-	   "cancel"
-	   (lambda (dialog ::Dialog button)
-	     (*:cancel dialog))))
+	  (make <android.app.AlertDialog$Builder>
+	    (this)
+	    title: (id->student-name ((this):get-db) id)
+	    view: (LinearLayout (this)
+				orientation: LinearLayout:VERTICAL
+				view: (Button (this)
+					      on-click-listener:
+					      (lambda (view)
+						(startActivity
+						 ((make <android.content.Intent> (as Context (this))
+							student-view):put-extra
+							(mk-extra student-view 'student) id)))
+					      text: "View Student Participation in all Discussions")
+				view: (Button (this)
+					      on-click-listener:
+					      (lambda (view)
+						(*:show
+						 (*:set-negative-button
+						  (*:set-positive-button
+						   (make <android.app.AlertDialog$Builder>
+						     (this)
+						     title: (id->student-name ((this):get-db) id)
+						     view: (TextView
+							    (this)
+							    text: "would you like to permanently remove this student?"))
+						   "yes"
+						   (lambda (dialog ::Dialog button)
+						     (*:dismiss dialog)
+						     (delete-student ((this):get-db) id)))
+						  "cancel"
+						  (lambda (dialog ::Dialog button)
+						    (*:cancel dialog)))))
+					      text: "Delete this Student"))))
 	 #t)))))
-
+  
 
 (define-simple-class tab-discussions (base-activity)
   (class-num ::int)
@@ -178,24 +198,24 @@
       (*:show
        (make <android.app.AlertDialog$Builder>
 	 (this)
-	 title: (id->discussion-date id)
+	 title: (id->discussion-date ((this):get-db) id)
 	 view: (LinearLayout (this)
 			     orientation: LinearLayout:VERTICAL
-			     view: (TextView (this)
+			     view: (Button (this)
 					     on-click-listener:
 					     (lambda (view)
-					       (StartActivity
+					       (startActivity
 						((make <android.content.Intent> (as Context (this))
 						       discussion-view):put-extra
-						       (mk-extra discussion-view 'discussion) id))
-					       text: "View Student Participation in this Discussion"))
-			     view: (TextView (this)
+						       (mk-extra discussion-view 'discussion) id)))
+					       text: "View Student Participation in this Discussion")
+			     view: (Button (this)
 					     on-click-listener:
 					     (lambda (view)
-					       (StartActivity
+					       (startActivity
 						(((make <android.content.Intent> (as Context (this))
 						       record-question):put-extra
 						       (mk-extra record-question 'class) class-num):put-extra
-						       (mk-extra record-quenstion 'discussion) id)))
+						       (mk-extra record-question 'discussion) id)))
 					     text: "Resume this Discussion"))))
       #t))))

@@ -92,11 +92,13 @@
 
 (define-alias R                         kawa.prototype.R)
 
-(define-alias android-config            net.schmizz.sshj.AndroidConfig)
-(define-alias ssh                       net.schmizz.sshj.SSHClient)
-(define-alias scp                       net.schmizz.sshj.xfer.scp.SCPFileTransfer)
-(define-alias local-dest-file           net.schmizz.sshj.xfer.LocalDestFile)
-(define-alias in-mem-file               net.schmizz.sshj.xfer.InMemoryDestFile)
-(define-alias file-system-file          net.schmizz.sshj.xfer.FileSystemFile)
+;; aliases for the sshj library; unused
+
+;;(define-alias android-config            net.schmizz.sshj.AndroidConfig)
+;;(define-alias ssh                       net.schmizz.sshj.SSHClient)
+;;(define-alias scp                       net.schmizz.sshj.xfer.scp.SCPFileTransfer)
+;;(define-alias local-dest-file           net.schmizz.sshj.xfer.LocalDestFile)
+;;(define-alias in-mem-file               net.schmizz.sshj.xfer.InMemoryDestFile)
+;;(define-alias file-system-file          net.schmizz.sshj.xfer.FileSystemFile)
 
 (define debug #f)

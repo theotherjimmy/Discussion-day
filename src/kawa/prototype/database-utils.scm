@@ -106,7 +106,7 @@
 
 (define (stats-list db ::student-data rename table id group)
   (db:raw-query
-   (mk-sql "SELECT " group "s." student-data:C_ID " AS _id , " group "s." rename " AS " 'name " , SUM(" 'log "." 'correct ") AS " 'correct " , SUM(" 'log "." 'incorrect ") AS " 'incorrect " , SUM(" 'log "." 'pass ") AS " 'pass " FROM " 'log " JOIN " group "s ON " 'log "." group "=" group "s." student-data:C_ID " WHERE " 'log "." table " = " id  " GROUP BY " 'log "." group " ORDER BY " group "s." rename " ASC")))
+   (mk-sql "SELECT " group "s." student-data:C_ID " AS _id , " group "s." rename " AS " 'name " , SUM(" 'log "." 'correct ") AS " 'correct " , SUM(" 'log "." 'incorrect ") AS " 'incorrect " , SUM(" 'log "." 'pass ") AS " 'pass " FROM " group "s LEFT OUTER JOIN " 'log " ON " 'log "." group "=" group "s." student-data:C_ID " WHERE " 'log "." table " = " id  " GROUP BY " 'log "." group " ORDER BY " group "s." rename " ASC")))
 
 (define (id->student-name db ::student-data id)
   (let ((pos (db:query
@@ -115,13 +115,31 @@
     (pos:move-to-first)
     (pos:get-string (pos:get-column-index (mk-sql 'name)))))
 
+(define (id->discussion-date db ::student-data id)
+  (let ((pos (db:query
+	      #t (mk-sql 'discussions) #!null (mk-sql student-data:C_ID " = " id) #!null
+	      #!null (mk-sql 'date " ASC") #!null)))
+    (pos:move-to-first)
+    (pos:get-string (pos:get-column-index (mk-sql 'date)))))
+
+(define (id->class-name db ::student-data id)
+  (let ((pos (db:query
+	      #t (mk-sql 'classes) #!null (mk-sql student-data:C_ID " = " id) #!null
+	      #!null (mk-sql 'name " ASC") #!null)))
+    (pos:move-to-first)
+    (string-append (pos:get-string (pos:get-column-index (mk-sql 'name)))
+		   " at "
+		   (pos:get-string (pos:get-column-index (mk-sql 'time))))))
+
 (define (add-student db ::student-data name eid (class ::int))
-  (let ((values ::ContentValues (make ContentValues)))
+  (let ((values ::ContentValues (make ContentValues))
+	(id ::int db:current-id))
     (values:clear)
     (values:put (mk-sql 'name) (as String name))
     (values:put (mk-sql 'eid) (as String eid))
     (values:put (mk-sql 'class) (Integer class))
     (*:insert-or-ignore db (mk-sql 'students) values)
+    (add-to-log db id class -1 'no-answer)
     db))
 
 (define (delete-student db ::student-data id)
@@ -149,9 +167,6 @@
 				      (*:format time "%Y %m %d")))
     (*:insert-or-ignore db (mk-sql 'discussions) values)
     id))
-
-(define (close-discussion db ::student-data id)
-  (db:update-row (mk-sql 'discussions) (mk-sql 'endid) id db:current-id))
 
 (define (add-to-log db ::student-data student-num ::int class-num ::int discussion-num ::int answer) 
   (let ((values ::ContentValues (make ContentValues)))
@@ -197,7 +212,6 @@
     (add-to-log db 3 0 discussion 'pass)
     (add-to-log db 3 0 discussion 'pass)
     (add-to-log db 3 0 discussion 'pass)
-    (add-to-log db 3 0 discussion 'pass)
-    (close-discussion db discussion))) 
+    (add-to-log db 3 0 discussion 'pass))) 
 
 
