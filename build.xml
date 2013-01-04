@@ -830,12 +830,15 @@
 
         </do-only-if-manifest-hasCode>
     </target>
+
+    
+    <!-- Compiles this project's scheme files into .class files. -->
     <target name="-scompile" depends="-jcompile, -build-setup, -pre-build, -code-gen, -pre-compile">
       <path id="project.kawac.classpath">
     	<path refid="project.all.jars.path" />
     	<path refid="tested.project.classpath" />
         <path path="${jar.libs.absolute.dir}" />
-	<path path="${sdk.dir}/platforms/android-12/android.jar"/>
+	<path path="${sdk.dir}/platforms/${target}/android.jar"/>
 	<path path="${out.classes.absolute.dir}"/>
 	<path path="${out.gen.absolute.dir}"/>
       </path>

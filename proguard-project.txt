@@ -27,7 +27,7 @@
 -injars bin/classes/
 -outjar bin/obfuscated.jar
 -libraryjars libs/
--libraryjars /opt/android-sdk/platforms/android-14/android.jar
+-libraryjars ${sdk.dir}/platforms/${target}/android.jar
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 
 -keep public class * extends android.app.Activity
