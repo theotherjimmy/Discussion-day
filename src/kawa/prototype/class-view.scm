@@ -61,7 +61,7 @@
 				 (add-student ((this):get-db) (car row) (cadr row) class-num)
 				 (e java.lang.ClassCastException
 				    nil)))
-			      (parse-csv (BufferedReader (FileReader (File (*:get-text filename))))))
+			      (cdr (parse-csv (BufferedReader (FileReader (File (*:get-text filename)))))))
 			 (e java.io.FileNotFoundException
 			    ((Toast:make-text
 			      (this) "Could Not Import: File Not Found!"

@@ -14,7 +14,7 @@
  	       PreferenceActivity PreferenceManager BaseColumns 
 	       Cursor cursor-window SQLCursor SQLiteDatabase SQLiteOpenHelper 
 	       String Integer 
-	       File FileReader BufferedReader 
+	       File FileReader BufferedReader BufferedWriter FileWriter
 	       Random 
 	       FVector 
 	       R
@@ -84,7 +84,9 @@
 
 (define-alias File                      java.io.File)
 (define-alias FileReader                java.io.FileReader)
+(define-alias FileWriter                java.io.FileWriter)
 (define-alias BufferedReader            java.io.BufferedReader)
+(define-alias BufferedWriter            java.io.BufferedWriter)
  
 (define-alias Random                    java.util.Random)
 

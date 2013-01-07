@@ -2,11 +2,37 @@
 (require base "base.scm")
 (require database-utils "database-utils.scm")
 (require utils "utils.scm")
+(require parse-csv "parse-csv.scm")
+
 
 (provide 'discussion-view)
 
 (define-simple-class discussion-view (base-activity)
   (discussion-num ::long)
+
+  ((onCreateOptionsMenu (menu ::Menu))
+   ((getMenuInflater):inflate R$menu:export menu)
+   #t)
+
+  ((onOptionsItemSelected (item ::MenuItem))
+   (let ((file ::EditText (EditText (this) hint: "File Name")))
+     (*:show
+      (*:set-negative-button
+       (*:set-positive-button
+	(make <android.app.AlertDialog$Builder>
+	  (this)
+	  title: "Export Discussion as CSV"
+	  view: file)
+	"Export"
+	(lambda (dialog ::Dialog button)
+	  (*:dismiss dialog)
+	  (export-csv (stats-list ((this):get-db) 'name 'discussion discussion-num 'student)
+		      (BufferedWriter (FileWriter (File (*:get-text file))))
+		      "Student Name")))
+       "Cancel"
+       (lambda (dialog ::Dialog button)
+	 (*:dismiss dialog)))))
+   #t)
 
   ((onCreate (saved-instance-state ::Bundle))
    (invoke-special base-activity (this) 'onCreate saved-instance-state)
@@ -25,6 +51,30 @@
 
 (define-simple-class student-view (base-activity)
   (student-num ::long)
+
+  ((onCreateOptionsMenu (menu ::Menu))
+   ((getMenuInflater):inflate R$menu:export menu)
+   #t)
+
+  ((onOptionsItemSelected (item ::MenuItem))
+   (let ((file ::EditText (EditText (this) hint: "File Name")))
+     (*:show
+      (*:set-negative-button
+       (*:set-positive-button
+	(make <android.app.AlertDialog$Builder>
+	  (this)
+	  title: "Export Student as CSV"
+	  view: file)
+	"Export"
+	(lambda (dialog ::Dialog button)
+	  (*:dismiss dialog)
+	  (export-csv (stats-list ((this):get-db) 'date 'student student-num 'discussion)
+		      (BufferedWriter (FileWriter (File (*:get-text file))))
+		      "Student Name")))
+       "Cancel"
+       (lambda (dialog ::Dialog button)
+	 (*:dismiss dialog)))))
+   #t)
 
   ((onCreate (saved-instance-state ::Bundle))
    (invoke-special base-activity (this) 'onCreate saved-instance-state)
